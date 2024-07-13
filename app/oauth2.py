@@ -20,6 +20,7 @@ def create_access_token(data: dict):
 
 def verify_access_token(token: str, credentials_exception):
     try:
+        token = token.strip()
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=settings.jwt_algorithm)
         id = payload.get("user_id")
         if id is None:
