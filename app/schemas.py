@@ -3,6 +3,30 @@ from typing import Optional
 from datetime import datetime
 from typing import Optional
 
+class UserBase(BaseModel):
+    email: EmailStr
+    password: str
+
+class CreateUser(UserBase):
+    pass
+
+class UpdateUser(UserBase):
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+    # so far, not required
+    # class Config:
+    #     orm_mode = True
+    
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 class PostBase(BaseModel):
     title: str
     content: str
@@ -19,27 +43,12 @@ class UpdatePost(PostBase):
 class PostResponse(PostBase):
     id: int
     created_at: datetime
+    owner_id: int
+    owner: UserResponse
+
+    # class Config:
+    #     orm_mode = True
     pass
-
-class UserBase(BaseModel):
-    email: EmailStr
-    password: str
-
-class CreateUser(UserBase):
-    pass
-
-class UpdateUser(UserBase):
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
-
-class UserResponse(BaseModel):
-    id: int
-    email: EmailStr
-    created_at: datetime
-    
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
 
 class Token(BaseModel):
     access_token: str
