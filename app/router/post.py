@@ -19,7 +19,7 @@ def get_post(id: int, db: Session = Depends(get_db)):
     return {"data": post}
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def create_post(payload: schemas.CreatePost, db: Session = Depends(get_db), req_user_id: int = Depends(oauth2.get_current_user)):
+def create_post(payload: schemas.CreatePost, db: Session = Depends(get_db), req_user: models.User = Depends(oauth2.get_current_user)):
     # unpack a dict: **dict
     post = models.Post(**payload.model_dump())
     db.add(post)
@@ -29,7 +29,7 @@ def create_post(payload: schemas.CreatePost, db: Session = Depends(get_db), req_
     return post
 
 @router.put("/{id}")
-def put_post(id: int, payload: schemas.CreatePost, db: Session = Depends(get_db)):
+def put_post(id: int, payload: schemas.CreatePost, db: Session = Depends(get_db), req_user: models.User = Depends(oauth2.get_current_user)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
 
@@ -42,7 +42,7 @@ def put_post(id: int, payload: schemas.CreatePost, db: Session = Depends(get_db)
     return post_query.first()
 
 @router.patch("/{id}")
-def patch_post(id: int, payload: schemas.UpdatePost, db: Session = Depends(get_db)):
+def patch_post(id: int, payload: schemas.UpdatePost, db: Session = Depends(get_db), req_user: models.User = Depends(oauth2.get_current_user)):
     # filter out None values, dictionary comprehension
     filtered_data = { k: v for k, v in payload.model_dump().items() if v is not None }
     
@@ -57,7 +57,7 @@ def patch_post(id: int, payload: schemas.UpdatePost, db: Session = Depends(get_d
     return post_query.first()
 
 @router.delete("/{id}")
-def delete_post(id: int, db: Session = Depends(get_db)):
+def delete_post(id: int, db: Session = Depends(get_db), req_user: models.User = Depends(oauth2.get_current_user)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
     if not post:
