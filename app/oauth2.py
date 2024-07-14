@@ -13,7 +13,7 @@ expiration_time = 30
 def create_access_token(data: dict):
     to_encode = data.copy()
     # datetime.utcnow() is deprecated
-    expire = datetime.now() + timedelta(minutes=expiration_time)
+    expire = datetime.now() + timedelta(minutes=settings.jwt_expiration)
     to_encode.update({"exp": expire})
 
     access_token = jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
