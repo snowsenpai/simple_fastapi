@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import HTTPException, status, Depends, APIRouter
 from sqlalchemy.orm import Session
 from .. import models, schemas, oauth2
@@ -7,9 +8,11 @@ router = APIRouter(prefix="/posts", tags=['Posts'])
 
 post_authorization_exception = HTTPException(status.HTTP_403_FORBIDDEN, "you do not own this post")
 
-@router.get("/", response_model=list[schemas.PostResponse])
-def get_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
+@router.get("/", response_model=List[schemas.PostResponse])
+def get_posts(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    print(search)
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    print(len(posts))
     return posts
 
 @router.get("/{id}", response_model=schemas.PostResponse)
