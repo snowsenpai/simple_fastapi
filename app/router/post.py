@@ -10,9 +10,7 @@ post_authorization_exception = HTTPException(status.HTTP_403_FORBIDDEN, "you do 
 
 @router.get("/", response_model=List[schemas.PostResponse])
 def get_posts(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    print(search)
     posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    print(len(posts))
     return posts
 
 @router.get("/{id}", response_model=schemas.PostResponse)
