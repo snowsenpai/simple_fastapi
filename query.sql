@@ -9,3 +9,9 @@ GROUP BY users.id;
 -- FROM posts 
 -- RIGHT JOIN users ON posts.owner_id = users.id
 -- GROUP BY users.id;
+
+-- include the number of votes each post has
+SELECT posts.* , COUNT(votes.post_id) as votes 
+FROM posts
+LEFT JOIN votes ON posts.id = votes.post_id
+GROUP BY posts.id;
