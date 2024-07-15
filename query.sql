@@ -1,7 +1,7 @@
 -- include the number of posts each user has created
 SELECT users.id AS user_id, email, COUNT(posts.owner_id) as num_of_posts
 FROM users
-LEFT JOIN posts ON posts.owner_id = users.id
+LEFT JOIN posts ON posts.owner_id = users.id -- outer join by default
 GROUP BY users.id;
 
 -- with right join, just for sql practice
