@@ -50,6 +50,10 @@ class PostResponse(PostBase):
     #     orm_mode = True
     pass
 
+class PostsVotesResponse(BaseModel):
+    Post: PostResponse
+    votes: int
+
 class Token(BaseModel):
     access_token: str
     token_type: str
